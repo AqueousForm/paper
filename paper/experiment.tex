@@ -1,0 +1,158 @@
+% Template for ICME 2018 paper; to be used with:
+%          spconf.sty  - ICASSP/ICIP/ICME LaTeX style file, and
+%          IEEEbib.bst - IEEE bibliography style file.
+% --------------------------------------------------------------------------
+\documentclass{article}
+\usepackage{spconf,amsmath,epsfig}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\pagestyle{empty}
+
+
+\begin{document}\sloppy
+
+% Example definitions.
+% --------------------
+\def\x{{\mathbf x}}
+\def\L{{\cal L}}
+
+
+% Title.
+% ------
+\title{A Hybrid System Integrating Calibration and Registration for Accurate 3D Reconstruction}
+%
+% Single address.
+% ---------------
+\name{Zhehan Song, Xuejin Chen}
+\address{University of Science and Technology of China}
+
+
+\maketitle
+
+
+
+\section{EXPERMENTS}
+
+\subsection{Reprojection error}
+Using the 2D coordinates of the corners detected in the checkerboard images, we can achieve the 3D space coordinates $\mathbf{P_{c}}$ by triangulation. Then we reproject $\mathbf{P_{c}}$ to each view which the checkerboard can be seen using the extrinsic parameters obtained by different methods and compute the average reprojection error, as shown in Table 1.
+\begin{table*}
+	\centering
+	\caption{Average reprojection error (pixels) of each camera using different methods. (a) results by Kalibr ~\cite{Maye2013Self}, (b) results by Kalibr ~\cite{Maye2013Self} with our registration step, (c) results by our global calibration method, (d) results by our integrated method. The reprojection error of (c) is the smaller and uniform in each view, while the results of other methods contain the accumulative error and the inconsistence. }
+	\label{tab:reprojection}
+	\begin{tabular}{lcccccccc}
+		\hline
+		Methods & Cam 1 & Cam 2 & Cam 3 & Cam 4 & Cam 5 & Cam 6 & Cam 7 & Cam 8\\
+		\hline
+		(a) &4.54 &3.20 &11.16 &10.74 &4.87 &6.75 &3.64 &5.11\\
+
+		(b) &3.75 &4.04 &11.40 &7.91 &6.39 &5.62 &3.39 &5.74\\
+		
+		(c) &0.32 &0.32 &0.38  &0.35 &0.37 &0.40 &0.33 &0.34 \\
+		
+		(d) &0.92 &0.99 &1.58 &2.19 &3.06 &1.79 &2.68 &1.38\\
+		\hline
+		
+	\end{tabular}
+
+
+\end{table*}
+The reprojection error of the proposed global calibration methods is the smaller among the different methods, which proves that the global optimization is quite effective. Although the registration step makes the model closer to the ground truth, it leads to the bigger reprojection error. That is because the aim of the registration step is to minimize the error caused by the inaccurate depth, but not to optimize the camera parameters.
+\subsection{Comparison with the ground truth}
+
+A plaster model of a  human head is placed in the center of our multi-camera system and the RGB and depth images of it can be obtained. We scan the model using a 3D laser scanner and achieved a mesh of the plaster head with the error smaller than 0.04 mm. We consider the accurate mesh as the ground truth and compare it with the reconstruction results using different methods. We compute the L2 distances of the point cloud to the mesh for each method. The average error is listed in Table~\ref{fig:distance}. As we can see, our method has the smaller error, which proves that it can achieve a high-quality model. We also show the distribution histogram of the error using different extrinsic parameters in Figure 3. Similarly, the result of our method has the more accurate result.
+\begin{figure*}[ht]
+  \centering
+\subfigure[]{
+\begin{minipage}[c]{.22\linewidth}
+\centering
+  \includegraphics[width=4cm]{image/dis_1.png}
+\end{minipage}
+}%
+\subfigure[]{
+\begin{minipage}[c]{.22\linewidth}
+\centering
+  \includegraphics[width=4cm]{image/dis_2.png}
+\end{minipage}
+}
+\subfigure[]{
+\begin{minipage}[c]{.22\linewidth}
+\centering
+  \includegraphics[width=4cm]{image/dis_3.png}
+\end{minipage}
+}
+\subfigure[]{
+\begin{minipage}[c]{.22\linewidth}
+\centering
+  \includegraphics[width=4cm]{image/dis_4.png}
+\end{minipage}
+}
+\caption{The distribution histogram of the L2 distances of the point cloud reconstructed using different methods to the ground truth. (a) results by Kalibr ~\cite{Maye2013Self}, (b) results by Kalibr ~\cite{Maye2013Self} with our registration step, (c) results by our global calibration method, (d) results by our integrated method. The number of the points with small distance increases obviously after the optimization and registration step we proposed.}
+\label{fig:histogram}
+\end{figure*}
+
+\subsection{Reconstrution results of human body}
+We reconstruct the 3D point clouds of a human body standing in the center of our multi-camera system using various methods. Figure~\ref{fig:pointcloud} shows the results which demonstrate our algorithm.
+\begin{figure*}[ht]
+  \centering
+\subfigure[]{
+\begin{minipage}[c]{.22\linewidth}
+\centering
+  \includegraphics[width=2.5cm]{image/pc_1.png}
+\end{minipage}
+}%
+\subfigure[]{
+\begin{minipage}[c]{.22\linewidth}
+\centering
+  \includegraphics[width=2.5cm]{image/pc_2.png}
+\end{minipage}
+}
+\subfigure[]{
+\begin{minipage}[c]{.22\linewidth}
+\centering
+  \includegraphics[width=2.5cm]{image/pc_3.png}
+\end{minipage}
+}
+\subfigure[]{
+\begin{minipage}[c]{.22\linewidth}
+\centering
+  \includegraphics[width=2.5cm]{image/pc_4.png}
+\end{minipage}
+}
+\caption{The reconstruction results of the back of a human using various methods.(a) results by Kalibr ~\cite{Maye2013Self}, (b) results by Kalibr ~\cite{Maye2013Self} with our registration step, (c) results by our global calibration method, (d) results by our integrated method. We render the point clouds with different colors to distinguish which view the point clouds belong to. The point clouds in result (a) are distinctly separated from other views, as the pink and green views cover the whole surface of the model. Result (b) becomes a little better while the green view still covers the right side of the body. The point clouds align quite well in result (c) with small blemishes, the azure view is inside the model. (d) shows a well-aligned model. }
+\label{fig:pointcloud}
+\end{figure*}
+
+\section{conclusion}
+We present an efficient system integrating the multi-camera calibration and point cloud registration. By a global bundle adjustment, we reduce the accumulative error and the inconsistence caused by the pairwise camera pose estimation, and achieve a set of accurate extrinsic parameters with less reprojection error. With the point cloud registration, we minimize the error from the depth estimation and achieve a high-quality 3D model. Our calibration algorithm has been tested on both reprojection error and ground truth data. The experimental results has proved that the two steps of our system are both necessary and effective, and a more accuracy model can be reconstructed using our method.
+\begin{table}
+	\centering
+	\caption{The distance between the point cloud and the ground truth. The distance (in centimeters )of the point cloud to the mesh of the plaster model computed by four different methods. (a) results by Kalibr ~\cite{Maye2013Self}, (b) results by Kalibr ~\cite{Maye2013Self} with our registration step, (c) results by our global calibration method, (d) results by our integrated method.}
+	\label{tab:distance}
+	\begin{tabular}{lcccc}
+		\hline
+		Methods & Mean &Standard deviation\\
+		\hline
+		(a) &0.9542 &0.7240\\
+
+		(b) &0.8243 &0.6376\\
+		
+		(c) &0.6408 &0.5072\\
+		
+		(d) &0.5811 &0.4650\\
+		\hline
+		
+	\end{tabular}
+\label{fig:distance}
+\end{table}
+
+\section{Acknowledgment}
+
+
+% References should be produced using the bibtex program from suitable
+% BiBTeX files (here: strings, refs, manuals). The IEEEbib.bst bibliography
+% style file from IEEE produces unsorted bibliography list.
+% -------------------------------------------------------------------------
+\bibliographystyle{IEEEbib}
+\bibliography{icme2018template}
+
+\end{document}
