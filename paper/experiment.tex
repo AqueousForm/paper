@@ -1,39 +1,14 @@
-% Template for ICME 2018 paper; to be used with:
-%          spconf.sty  - ICASSP/ICIP/ICME LaTeX style file, and
-%          IEEEbib.bst - IEEE bibliography style file.
-% --------------------------------------------------------------------------
-\documentclass{article}
-\usepackage{spconf,amsmath,epsfig}
-\usepackage{graphicx}
-\usepackage{subfigure}
-\pagestyle{empty}
+ 
+\section{Results and Discussion}
+\label{sec:Results}
+
+\md{In order to evaluate the impacts of different components of our hybrid system, a series of experiments are conducted. We first show ... and then ...}
 
 
-\begin{document}\sloppy
-
-% Example definitions.
-% --------------------
-\def\x{{\mathbf x}}
-\def\L{{\cal L}}
+\subsection{Re-projection error}
+\xj{Why do we need reprojection error while the goal is 3D reconstruction? }
 
 
-% Title.
-% ------
-\title{A Hybrid System Integrating Calibration and Registration for Accurate 3D Reconstruction}
-%
-% Single address.
-% ---------------
-\name{Zhehan Song, Xuejin Chen}
-\address{University of Science and Technology of China}
-
-
-\maketitle
-
-
-
-\section{EXPERMENTS}
-
-\subsection{Reprojection error}
 Using the 2D coordinates of the corners detected in the checkerboard images, we can achieve the 3D space coordinates $\mathbf{P_{c}}$ by triangulation. Then we reproject $\mathbf{P_{c}}$ to each view which the checkerboard can be seen using the extrinsic parameters obtained by different methods and compute the average reprojection error, as shown in Table 1.
 \begin{table*}
 	\centering
@@ -43,23 +18,40 @@ Using the 2D coordinates of the corners detected in the checkerboard images, we 
 		\hline
 		Methods & Cam 1 & Cam 2 & Cam 3 & Cam 4 & Cam 5 & Cam 6 & Cam 7 & Cam 8\\
 		\hline
-		(a) &4.54 &3.20 &11.16 &10.74 &4.87 &6.75 &3.64 &5.11\\
+		(a) Kalibr &4.54 &3.20 &11.16 &10.74 &4.87 &6.75 &3.64 &5.11\\
 
-		(b) &3.75 &4.04 &11.40 &7.91 &6.39 &5.62 &3.39 &5.74\\
+		(b) Kalibr+ICP &3.75 &4.04 &11.40 &7.91 &6.39 &5.62 &3.39 &5.74\\
 		
-		(c) &0.32 &0.32 &0.38  &0.35 &0.37 &0.40 &0.33 &0.34 \\
+		(c) SBA 　 &\textbf{0.32} &\textbf{0.32} &\textbf{0.38}  &\textbf{0.35} &\textbf{0.37} &\textbf{0.40} &\textbf{0.33} &\textbf{0.34} \\
 		
-		(d) &0.92 &0.99 &1.58 &2.19 &3.06 &1.79 &2.68 &1.38\\
+		(d) SBA+ICP &0.92 &0.99 &1.58 &2.19 &3.06 &1.79 &2.68 &1.38\\
 		\hline
 		
 	\end{tabular}
 
 
 \end{table*}
-The reprojection error of the proposed global calibration methods is the smaller among the different methods, which proves that the global optimization is quite effective. Although the registration step makes the model closer to the ground truth, it leads to the bigger reprojection error. That is because the aim of the registration step is to minimize the error caused by the inaccurate depth, but not to optimize the camera parameters.
+
+
+The reprojection error of the proposed global calibration method is the smaller among the different methods, which proves that the global optimization is quite effective. Although the registration step makes the model closer to the ground truth, it leads to the bigger reprojection error. That is because the aim of the registration step is to minimize the error caused by the inaccurate depth estimation, but not to optimize the camera parameters.
+
+
 \subsection{Comparison with the ground truth}
 
-A plaster model of a  human head is placed in the center of our multi-camera system and the RGB and depth images of it can be obtained. We scan the model using a 3D laser scanner and achieved a mesh of the plaster head with the error smaller than 0.04 mm. We consider the accurate mesh as the ground truth and compare it with the reconstruction results using different methods. We compute the L2 distances of the point cloud to the mesh for each method. The average error is listed in Table~\ref{fig:distance}. As we can see, our method has the smaller error, which proves that it can achieve a high-quality model. We also show the distribution histogram of the error using different extrinsic parameters in Figure 3. Similarly, the result of our method has the more accurate result.
+\xj{Explain why do you need this experiment.}
+
+
+A plaster model of a human head is placed in the center of our multi-camera system and the RGB and depth images of it can be obtained. 
+We scan the model using a 3D laser scanner and achieved a mesh of the plaster head with the error smaller than 0.04 mm. 
+We consider the accurate mesh as the ground truth and compare it with the reconstructed 3D model using different methods. 
+We compute the L2 distances of the point cloud to the mesh for each method.
+\xj{How do you compute the L2 distance between a point cloud and a mesh? for each point in a point cloud, find the nearest point on the mesh?}
+%
+The average error is listed in Table~\ref{fig:distance}. As we can see, our method has the smaller error, which proves that it can achieve a high-quality model.
+We also show the distribution histogram of the error using different extrinsic parameters in Figure 3. 
+\xj{Fig 3?}
+Similarly, the result of our method has the more accurate result.
+
 \begin{figure*}[ht]
   \centering
 \subfigure[]{
@@ -90,8 +82,13 @@ A plaster model of a  human head is placed in the center of our multi-camera sys
 \label{fig:histogram}
 \end{figure*}
 
-\subsection{Reconstrution results of human body}
+\subsection{Reconstruction results of human bodies}
+
 We reconstruct the 3D point clouds of a human body standing in the center of our multi-camera system using various methods. Figure~\ref{fig:pointcloud} shows the results which demonstrate our algorithm.
+\xj{explain the results. show different views. }.
+
+\xj{Show at least three groups of results, in different human pose.}
+
 \begin{figure*}[ht]
   \centering
 \subfigure[]{
@@ -145,14 +142,4 @@ We present an efficient system integrating the multi-camera calibration and poin
 \label{fig:distance}
 \end{table}
 
-\section{Acknowledgment}
-
-
-% References should be produced using the bibtex program from suitable
-% BiBTeX files (here: strings, refs, manuals). The IEEEbib.bst bibliography
-% style file from IEEE produces unsorted bibliography list.
-% -------------------------------------------------------------------------
-\bibliographystyle{IEEEbib}
-\bibliography{icme2018template}
-
-\end{document}
+ 
