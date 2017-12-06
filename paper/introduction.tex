@@ -3,32 +3,34 @@
 
 Real-time indoor 3D reconstruction from multiple views has become more and more prevalent in recent years~\cite{dou2016fusion4d,orts2016holoportation}. Multi-camera systems using RGBD cameras have many advantages such as a wider horizon compared with the systems based on a single camera, and are widely used in many kinds of applications. However, both the intrinsic and extrinsic parameters of the multi-camera systems are required to be calibrated accurately in order to achieve a high-quality and real-time 3D reconstruction of an entire object, such as a person or a furniture object.
 
-For a single camera system, the accurate intrinsic parameters can be achieved by many internal calibration methods or toolboxes~\cite{zhang2000flexible,zhang2004camera}. Many efficient methods have also been developed for the calibration of different types of multi-camera calibration. 
+For a single camera system, the accurate intrinsic parameters can be achieved by many internal calibration methods or toolboxes~\cite{zhang2000flexible,zhang2004camera}. Many efficient methods have also been developed for the calibration of different types of multi-camera calibration.
 %
-One widely proposed approach for the multi-camera calibration is to use special calibration objects, such as patterns, rig or similar. 
-Li et al. proposed a toolbox to calibrate the system which uses a feature descriptor based calibration pattern~\cite{Li2013A}. 
+One widely proposed approach for the multi-camera calibration is to use special calibration objects, such as patterns, rig or similar.
+\md{Li et al. proposed a toolbox to calibrate the system using a specially designed calibration pattern based on feature detection~\cite{Li2013A}.}
 \xj{...confusing here}
 %
-The pattern can be automatically detected even if the pattern is partially visible in an image. The toolbox yields good results especially on the systems with a few cameras (three or four) with minimal overlapping fields of view. 
+The pattern can be automatically detected even if the pattern is partially visible in an image. The toolbox yields good results especially on the systems with a few cameras (three or four) with \md{small} overlapping fields of view.
 \xj{what do you mean by minimal?}
 %
-Zhao and Liu proposed an algorithm based on 1D objects \xj{what do you mean by 1D?} which works well on a triple camera system~\cite{zhao2008practical}. The algorithm integrates a rank-4 factorization with the standard 1D camera calibration method and is much more convenient than plane-based algorithms. 
-Svoboda et al. gives a method that only requires a bright-spot object like a laser pointer~\cite{svoboda2005convenient}. Waving the object which can be easily detected in each image through the working space is the only work requested. 
+Zhao and Liu proposed an algorithm based on 1D objects \xj{what do you mean by 1D?} which works well on a triple camera system~\cite{zhao2008practical}. \md{They use a 20cm long stick with 3 markers rotates around a fixed point as the calibration object.} The algorithm integrates a rank-4 factorization with the standard 1D camera calibration method and is much more convenient than plane-based algorithms.
+Svoboda et al. gives a method that only requires a bright-spot object like a laser pointer~\cite{svoboda2005convenient}. Waving the object which can be easily detected in each image through the working space is the only work requested.
 \xj{Authors: A and B or A et al. Modify all the reference in the draft. }
-Kalibr~\cite{Maye2013Self} is a free toolbox that solves the multiple camera calibration problems. 
+Kalibr~\cite{Maye2013Self} is a free toolbox that solves the multiple camera calibration problems.
 %
-It could produce a good estimate but requires that neighboring cameras have overlapping fields of view. 
-However, if the system contains many cameras and they do not share the same overlapping fields of view, the calibration process should be simply repeated for each pair of cameras.
+It could produce a good estimate but requires that neighboring cameras have overlapping fields of view.
+However, if the system contains many cameras and they do not share the same overlapping fields of view, the calibration process should be simply repeated for each pair of cameras. \md{Meanwhile, repeating the independent pairwise calibration may result in accumulated error.}
 \xj{So any problem of the Kalibr?}
 
-Another kind of methods which is commonly used is self-calibration. These methods do the calibration using the constraints and correspondences from the images without any special calibration objects. 
-Bundler~\cite{snavely2006photo} is a structure-from-motion toolbox using the unordered images captured from different views. The pose of all cameras can be estimated simultaneously with the 3D point positions. 
-It uses SIFT keypoint detector~\cite{lowe2004distinctive} which works well on outdoor scenes but weak on indoor cases because of the lack of rich textures. Vasconcelos~\cite{vasconcelos2012minimal} proposed a solution to calibrate a camera with two other calibrated cameras using independent pairwise point correspondences.
-% 
-Bushnevskiy~\cite{bushnevskiy2016multicamera} presented a novel approach for the estimation of the geometry of the multi-camera system. The algorithm enforces constraints arising from the visible epipoles and is especially suitable for dome-like indoor cases.
+Another kind of methods which is commonly used is self-calibration. These methods do the calibration using the constraints and correspondences from the images without any special calibration objects.
+Bundler~\cite{snavely2006photo} is a structure-from-motion toolbox using the unordered images captured from different views. The pose of all cameras can be estimated simultaneously with the 3D point positions.
+It uses SIFT keypoint detector~\cite{lowe2004distinctive} which works well on outdoor scenes but weak on indoor cases because of the lack of rich textures. Vasconcelos et al.~\cite{vasconcelos2012minimal} proposed a solution to calibrate a camera with two other calibrated cameras using independent pairwise point correspondences.
+%
+Bushnevskiy et al.~\cite{bushnevskiy2016multicamera} presented a novel approach for the estimation of the geometry of the multi-camera system. The algorithm enforces constraints arising from the visible epipoles and is especially suitable for dome-like indoor cases.
 
 All these methods use RGB images to calibrate the multi-camera system and achieve good results. However, not only RGB cameras, other kinds of sensors are also widely used in 3D reconstruction system nowadays, like Near Infra-Red (NIR) cameras. If there are such cameras within the system used to estimate the depth, the error of the final result of the 3D reconstruction not only comes from the calibration of the RGB cameras but also from the depth estimation. Many research have been done on the depth estimation~\cite{scharstein,Bleyer2011PatchMatch}, whereas the error can not be eliminated entirely. How to minimize the error of the whole reconstruction to achieve an accurate model is a problem.
 
-In this paper, we present an efficient algorithm to optimize the extrinsic camera parameters for indoor 3D reconstruction. To avoid from accumulative error caused by the repetitive calibration for each pair of cameras, we use a global camera calibration method and optimize all the camera parameters consistently. Furthermore, we use the point cloud registration method to adjust the result of the reconstruction. This can effectively decrease the error result from the depth estimation and obtain a high-quality 3D reconstruction.
+In this paper, we present an efficient algorithm to optimize the extrinsic camera parameters for indoor 3D reconstruction. To avoid from accumulative error caused by the repetitive calibration for each pair of cameras, we use a global camera calibration method and optimize all the camera parameters consistently. Furthermore, we use the point cloud registration method to adjust the result of the reconstruction. This can effectively decrease the error results from the depth estimation and obtain a high-quality 3D reconstruction.
 
 
+\section{Overview}
+Our algorithm consists of two main parts. Firstly, we use the toolbox Kalibr~\cite{Maye2013Self} to calibrate our multi-camera system and achieve the intrinsic and initial extrinsic parameters of all our cameras. Then we use a checkerboard as the calibration object, detect the corners on it and do the global extrinsic parameters optimization, as described in Sec. 3. Secondly, we use the camera parameters and the input rgb and depth images to reconstruct the point clouds of the model and use ICP (Iterative Closest Point)~\cite{Besl1992A} to align the point clouds of different views. With the transform of the registration, the error caused by depth estimation can be minimized and a more accurate 3D reconstruction can be achieved, as described in Sec. 4. Finally, we compare the reconstruction results using different methods. We also compute the reprojection error and use a plaster model as the ground truth to verify the effectivity of our algorithm, as described in Sec. 5.

@@ -5,7 +5,8 @@
 \xj{Need a paragraph or section to describe the whole system of generating the final 3D model.}
 
 
-The cameras in our 3D reconstruction system are placed on the periphery of the room pointing inwards, only the neighboring cameras have overlapping fields of view. We found that if we calibrate the cameras pairwisely, accumulative error will occur and can be seen obviously in the result of the reconstruction. After the initial calibration, \xj{what is the input and output of the initial calibration?} we optimize the extrinsic parameters globally using a checkerboard.
+The cameras in our 3D reconstruction system are placed on the periphery of the room pointing inwards, only the neighboring cameras have overlapping fields of view. We found that if we calibrate the cameras pairwisely, accumulative error will occur and can be seen obviously in the result of the reconstruction. \md{To solve this problem, we firstly use the
+toolbox Kalibr~\cite{Maye2013Self} to obtain the intrinsic parameters and the initial extrinsic parameters of each camera.} After the initial calibration, \xj{what is the input and output of the initial calibration?} we optimize the extrinsic parameters globally using a checkerboard.
 
 %\subsection{Multi-camera system}
 \begin{figure*}[!htp]
@@ -16,7 +17,8 @@ The cameras in our 3D reconstruction system are placed on the periphery of the r
 \end{figure*}
 
 We employ 8 camera pods around the working space looking inwards for a full capture as shown in Figure~\ref{fig:rig}. Each camera pod consists of one color camera and two Near Infra-Red cameras. A laser pointer is used to produce special patterns.
-From the two images of the projected patterns captured by the two NIR cameras, a depth map can be estimated using \xj{what algorithm?}
+From the two images of the projected patterns captured by the two NIR cameras, a depth map can be estimated using PatchMatch
+stereo~\cite{Bleyer2011PatchMatch}.\xj{what algorithm?}
 % it depth images can be achieved by the 2  using depth estimation methods.
 
 
@@ -32,18 +34,18 @@ The $\mathbf{K}$ and initial $\mathbf{M}$ of each camera are calibrated by Kalib
 
 %\subsection{Global optimization}
 
-We use a $6\times7$ checkerboard with squares of 117 mm for the optimization. 
+\md{Because of the lack of the features in our indoor scene and the high requirement of the quality of the calibration, we use a $6\times7$ checkerboard with squares of 117 mm which can be made easily for the accuracy and robustness.}
 \xj{Why do you need checkerboard? Why do you use 6x7 rather than other pattern?}
 %
-The user is requested to move the checkerboard in front of the cameras freely in the working space. The checkerboard can be simultaneously seen in three or four views usually. 
+The user is requested to move the checkerboard in front of the cameras freely in the working space. The checkerboard can be simultaneously seen in three or four views usually.
 %
-Then the 42 corners on the checkerboard can be detected in each group. 
+Then the 42 corners on the checkerboard can be detected in each group.
 %
-We can estimate the 3D coordinates $\mathbf{P_{c}}$ of each corner from the corresponding 2D coordinates $\{\mathbf{p_{c}}_{j}\}_{j=1,...,n}$ by triangulation, where $n$ is the number of the views that the checkerboard can be seen in at the same time. 
-To make the optimization result be more consistent to the whole system, we also use the images with checkerboard on the ground which allows the checkerboard corners can be seen in all the 8 cameras,  as shown in Figure~\ref{fig:checkerboard}. This will help to reduce the accumulative error and inconsistence caused by the pairwise calibration. 
+We can estimate the 3D coordinates $\mathbf{P_{c}}$ of each corner from the corresponding 2D coordinates $\{\mathbf{p_{c}}_{j}\}_{j=1,...,n}$ by triangulation, where $n$ is the number of the views that the checkerboard can be seen in at the same time.
+To make the optimization result be more consistent to the whole system, we also use the images with checkerboard on the ground which allows the checkerboard corners can be seen in all the 8 cameras,  as shown in Figure~\ref{fig:checkerboard}. This will help to reduce the accumulative error and inconsistence caused by the pairwise calibration.
 The aim of the optimization is to minimize the sum of all reprojection errors with respect to all 3D points and extrinsic parameters, which is described as
 \begin{equation}
-E(\{\mathbf{K_{ex}}_{i}\})=\sum_{i}\sum_{j}((\mathbf{K_{in}}_{i}\mathbf{K_{ex}}_{i}\mathbf{P_{c}}_{j})-\mathbf{p_{c}}_{ij})^{2}.
+E(\mathbf{K_{ex}}_{i},\mathbf{P_{c}}_{j})=\sum_{i}\sum_{j}((\mathbf{K_{in}}_{i}\mathbf{K_{ex}}_{i}\mathbf{P_{c}}_{j})-\mathbf{p_{c}}_{ij})^{2}.
 \end{equation}
 \xj{Do you only optimize the camera extrinsic parameters? How about the point coordinates?}
 We use an open source software package called sba to solve this problem~\cite{lour09}.
@@ -74,20 +76,44 @@ We use an open source software package called sba to solve this problem~\cite{lo
 \section{point cloud registration}
 \label{sec:registration}
 
-We achieve the depth data from the 2 NIR cameras using depth estimation methods~\cite{Bleyer2011PatchMatch}. Although after the global optimization, we can get a result with less reprojection error, but it may not be the optimal solution to the 3D reconstruction because the quality of depth estimation also influence the final result. If the depth and camera parameters are both accurate enough, the point clouds of different views should align very well. 
-However, the error cannot be avoided completely.
+We achieve the depth data from the 2 NIR cameras using depth estimation methods~\cite{Bleyer2011PatchMatch}. Although after the global optimization, we can get a result with less reprojection error, but it may not be the optimal solution to the 3D reconstruction because the quality of depth estimation also influence the final result. If the depth and camera parameters are both accurate enough, the point clouds of different views should align very well.
+\md{However, the depth estimation methods based on NIR cameras are not suitable for all cases and are not robust enough especially for light-absorbing material like black hair. Moreover, the depth estimation may be affected by many factors like the quality of the laser pointer, the interaction effect on the camera pods which are arranged towards each other caused by the laser and similarity. Although there have been many research on it, the error cannot be avoided completely.}
+%However, the error cannot be avoided completely.
 \xj{what error? caused by what?}
 
-We reconstruct the point cloud of one view using the depth data, found the distortion on the boundary of the model, especially near the head, as shown in Figure~\ref{fig:deptherror}. Moreover, although the reprojection error after the global optimization mentioned in the last section is at sub-pixel level, we also find the separation between the point cloud of different views, effecting the quality of reconstruction. 
+We reconstruct the point cloud of one view using the rgb and depth data, found the distortion on the boundary of the model, especially near the head, as shown in Figure~\ref{fig:deptherror}. Moreover, although the reprojection error after the global optimization mentioned in the last section is at sub-pixel level, which can prove the high accuracy of our calibration result, we still find the separation between the point cloud of different views when we map the depth to the entire model, effecting the quality of reconstruction. These deficiencies are mainly caused by the depth estimation.
 %
 To minimize the error from depth data and achieve high-quality reconstruction results, we use ICP to map the inaccurate depth to a 3D model by point cloud registration.
-\begin{figure}[ht]
-\centering
-\includegraphics[scale=0.4]{image/depth_error.png}
-\caption{The distortion near the head of the model of a single view which is caused by the inaccurate depth estimation. \xj{It is not clear. show a rgb image? or depth map from the camera view?}}
-\label{fig:deptherror}
-\end{figure}
 
+\begin{figure*}[ht]
+  \centering
+\subfigure[]{
+\begin{minipage}[c]{.22\linewidth}
+\centering
+  \includegraphics[width=4cm]{image/depth_error_rgb.png}
+\end{minipage}
+}%
+\subfigure[]{
+\begin{minipage}[c]{.22\linewidth}
+\centering
+  \includegraphics[width=4cm]{image/depth_error_depth.png}
+\end{minipage}
+}
+\subfigure[]{
+\begin{minipage}[c]{.22\linewidth}
+\centering
+  \includegraphics[width=4cm]{image/depth_error_pc.png}
+\end{minipage}
+}
+\subfigure[]{
+\begin{minipage}[c]{.22\linewidth}
+\centering
+  \includegraphics[width=4cm]{image/depth_error_pc_2.png}
+\end{minipage}
+}
+\caption{(a): RGB data. (b): Depth data. (c): The point cloud reconstruted by (a) and (b). (d): (c) in another view. The distortion near the head of the model of a single view which is caused by the inaccurate depth estimation can seen in the red box.}
+\label{fig:deptherror}
+\end{figure*}
 
 
 For each point reconstructed by the depth image, we consider an estimation
@@ -108,10 +134,10 @@ We choose the point cloud of view 1 as the reference, align the point cloud of v
 
 
 \xj{Show depth maps from 8 views. Show three fused models from pairwisely estimated camera parameters, globally estimated camera parameters, and after icp registration.  }
-
+\md{(I am finding a better way to show the depth map. I don't know whether there is any mature software to show depth map. Or i will write a program to show it.)}
 
 % References should be produced using the bibtex program from suitable
 % BiBTeX files (here: strings, refs, manuals). The IEEEbib.bst bibliography
 % style file from IEEE produces unsorted bibliography list.
 % -------------------------------------------------------------------------
- 
+
