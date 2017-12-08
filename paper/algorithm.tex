@@ -1,24 +1,60 @@
 
 \section{Global Camera Calibration}
-\label{sec:algorithm}
-
-\xj{Need a paragraph or section to describe the whole system of generating the final 3D model.}
+\label{sec:global-calib}
 
 
-The cameras in our 3D reconstruction system are placed on the periphery of the room pointing inwards, only the neighboring cameras have overlapping fields of view. We found that if we calibrate the cameras pairwisely, accumulative error will occur and can be seen obviously in the result of the reconstruction. \md{To solve this problem, we firstly use the
-toolbox Kalibr~\cite{Maye2013Self} to obtain the intrinsic parameters and the initial extrinsic parameters of each camera.} After the initial calibration, \xj{what is the input and output of the initial calibration?} we optimize the extrinsic parameters globally using a checkerboard.
+To calibrate the multiple cameras, we follow the common framework consists of searching for feature point correspondences and minimizing reprojection errors. 
+%
+Because of the lack of the features in indoor scenes and the high requirement of the quality of the calibration, we use a $6\times7$ checkerboard with squares of 117 mm which can be made easily for the accuracy and robustness. 
+
+%
+An user holding the checkboard could move in front of the cameras freely in the working space. 
+At each moment, the 8 cameras capture images simultaneously. 
+%
+The checkerboard is simultaneously seen in three or four views usually. 
+%
+Our system is flexible enough while it does not require that the checkboard must be visible under all points of view.
+%
+Then the 42 corners on the checkerboard can be detected in each local group.
+%
+For each time $t$, denote the group of cameras that can see the checkboard corners as $\mathcal{C}^t$. The 3D coordinates of the 42 corner points are denoted as $\{\vb{p}^{t}_{i}\}_{i=1,\ldots, 42}$, while their corresponding 2D coordinates detected in each image captured by the camera $c_j \in \mathcal{C}^{t}$ are $\{\vb{x}^{t}_{ji}\}$. 
+
+
+
+While the user holding the checkboard moves around, we can capture $T$ groups of checkboard images and detect the corners at each time. 
+%
+To make the optimization result be more consistent to the whole system, we also use the images with checkerboard on the ground which allows the checkerboard corners can be seen in all the 8 cameras, as shown in Figure~\ref{fig:checkerboard}. This will help to reduce the accumulative error and inconsistence caused by the pairwise calibration. 
+%Typically, our system could
+\xj{Discussion on the range of T.}
+
+According to the projection equation defined in Eq.~\ref{eq:cam-proj}, our calibration method optimizes the camera parameters to minimize the projection errors. Considering the $T$ groups of images together, the projection error is defined as: 
+%
+\begin{equation} \label{eq:global-proj-error}
+E(\mathbf{M}_{j},\mathbf{p}^{t}_{i})=\sum_{t}\sum_{j\in \mathcal{C}^{t}}\sum_{i} \big( \hat{\vb{x}}(\vb{K}_{j},\mathbf{M}_{j}, \vb{p}^{t}_{i})-\mathbf{x}^{t}_{ji} \big)^{2},
+\end{equation}
+%
+where $\hat{\vb{x}}(\vb{K}_{j},\mathbf{M}_{j}, \mathbf{p}_{i})$ is the estimated 2D positions of a 3D point $\vb{p}^{t}_{i}$ in the image plane of the camera $c_j$ with its parameters $\camin_j$ and $\camex_j$.
+
+
+The above optimization could be solved by the Sparse Bundle Adjustment package~\cite{lour09}, which uses a Levenberg-Marquardt technique to optimize the parameters iteratively. 
+Inevitably, this algorithm only finds a local optimal. 
+A good initialization is required to get a good results. 
+
+
+Though sequentially calibrate the neighboring cameras leads to accumulated errors, it could provide an initialization for the global optimization.
+% 
+We use the toolbox Kalibr~\cite{Maye2013Self} to obtain the intrinsic parameters and the initial extrinsic parameters of neighboring cameras sequentially. 
+%
+Then we estimate the 3D coordinates $\mathbf{p}^{t}_{ji}$ of each corner from the corresponding 2D coordinates by triangulation.
+%where $n$ is the number of the views that the checkerboard can be seen in at the same time.
+%
+After the initial calibration, we globally optimize the extrinsic parameters and the 3D coordinates of each corner.
 
 %\subsection{Multi-camera system}
-\begin{figure*}[!htp]
-\centering
-\includegraphics[scale=0.08]{image/rig.jpg}
-\caption{Our multi-camera system with 8 camera pods pointing inwards.}
-\label{fig:rig}
-\end{figure*}
 
+\comments{
 We employ 8 camera pods around the working space looking inwards for a full capture as shown in Figure~\ref{fig:rig}. Each camera pod consists of one color camera and two Near Infra-Red cameras. A laser pointer is used to produce special patterns.
-From the two images of the projected patterns captured by the two NIR cameras, a depth map can be estimated using PatchMatch
-stereo~\cite{Bleyer2011PatchMatch}.\xj{what algorithm?}
+From the two images of the projected patterns captured by the two NIR cameras, a depth map can be estimated using PatchMatch stereo algorithm~\cite{Bleyer2011PatchMatch}.
 % it depth images can be achieved by the 2  using depth estimation methods.
 
 
@@ -28,27 +64,16 @@ Let $\mathbf{p}=(x,y,z,1)^{T}$ be the homogeneous coordinate of a point $P$ in t
 z_{p}\mathbf{x}=\mathbf{K}\mathbf{M}\mathbf{p},
 \end{equation}
 where $z_{p}$ is the projective depth of point $P$, $\mathbf{K}$ and $\mathbf{M}$ are the intrinsic and extrinsic parameters of the camera.
+}
+
+
 
 %\subsection{Initial calibration}
-The $\mathbf{K}$ and initial $\mathbf{M}$ of each camera are calibrated by Kalibr~\cite{Maye2013Self} pairwisely because of the lack of the common overlapping fields of view, including the 8 color cameras' extrinsic parameters $\{\mathbf{M}_{i}\}_{i=1,...,8}$. The extrinsic parameters from the 2 NIR cameras to the color camera in the same camera pod are also achieved, but these extrinsic parameters are fixed and used to estimate the depth in each view.
+The $\mathbf{K}$ and initial $\mathbf{M}$ of each camera are calibrated by Kalibr~\cite{Maye2013Self} pairwisely because of the lack of the common overlapping fields of view, including the 8 color cameras' extrinsic parameters $\{\mathbf{M}_{i}\}_{i=1,\ldots,8}$. The extrinsic parameters from the 2 NIR cameras to the color camera in the same camera pod are also achieved, but these extrinsic parameters are fixed and used to estimate the depth in each view.
 
 %\subsection{Global optimization}
 
-\md{Because of the lack of the features in our indoor scene and the high requirement of the quality of the calibration, we use a $6\times7$ checkerboard with squares of 117 mm which can be made easily for the accuracy and robustness.}
-\xj{Why do you need checkerboard? Why do you use 6x7 rather than other pattern?}
-%
-The user is requested to move the checkerboard in front of the cameras freely in the working space. The checkerboard can be simultaneously seen in three or four views usually.
-%
-Then the 42 corners on the checkerboard can be detected in each group.
-%
-We can estimate the 3D coordinates $\mathbf{P_{c}}$ of each corner from the corresponding 2D coordinates $\{\mathbf{p_{c}}_{j}\}_{j=1,...,n}$ by triangulation, where $n$ is the number of the views that the checkerboard can be seen in at the same time.
-To make the optimization result be more consistent to the whole system, we also use the images with checkerboard on the ground which allows the checkerboard corners can be seen in all the 8 cameras,  as shown in Figure~\ref{fig:checkerboard}. This will help to reduce the accumulative error and inconsistence caused by the pairwise calibration.
-The aim of the optimization is to minimize the sum of all reprojection errors with respect to all 3D points and extrinsic parameters, which is described as
-\begin{equation}
-E(\mathbf{K_{ex}}_{i},\mathbf{P_{c}}_{j})=\sum_{i}\sum_{j}((\mathbf{K_{in}}_{i}\mathbf{K_{ex}}_{i}\mathbf{P_{c}}_{j})-\mathbf{p_{c}}_{ij})^{2}.
-\end{equation}
-\xj{Do you only optimize the camera extrinsic parameters? How about the point coordinates?}
-We use an open source software package called sba to solve this problem~\cite{lour09}.
+
 
 
 \begin{figure}[ht]
