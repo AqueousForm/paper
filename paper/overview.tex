@@ -34,11 +34,12 @@ From the depth map estimated by each camera pod, a partial point cloud can be re
 A 3D model can be obtained by fusing the $K$ point clouds. 
 %
 %
-Ideally, with accurate depth $z_p$ of each image point $\vb{x}$, and accurate camera parameters $\camin$ and $\camex$, the image pixels captured in different views can be back-projected to the 3D space and produce a 3D point $\vb{p}$ consistently. 
+Ideally, with accurate depth $z_p$ of each image point $\vb{x}$, and accurate camera parameters $\camin$ and $\camex$, the image pixels captured in different views can be back-projected to the 3D space and well aligned to a 3D point $\vb{p}$. 
 To reconstruct a high-quality model, our algorithm consists of two main parts. 
 %
 The first part is a global camera calibration method to estimate the camera parameters $\{\camin_k, \camex_k\}^{K}_{k=1}$ as accurate as possible, as described in Sec.~\ref{sec:global-calib}.
 The second is a registration method to produce 3D point clouds as consistent as possible from in-accurate depth $z_p$, as described in Sec.~\ref{sec:registration}.  
+\xj{Explain with a pipeline figure.}
 
 
 
@@ -58,3 +59,4 @@ Finally, we compare the reconstruction results using different methods. We also 
 	\caption{Depth maps generated at different views. The depth maps are inaccurate, incomplete and noisy. \xj{Add depth map examples}}
 	\label{fig:depthmap}
 \end{figure}
+

@@ -2,17 +2,23 @@
 \section{Results and Discussion}
 \label{sec:Results}
 
-\md{In order to evaluate the impacts of different components of our hybrid system, a series of experiments are conducted. We first show the re-projection error of different methods and then use a plaster human head as the ground truth to verify the quality of the 3D reconstruction result. Finally we show the reconstructed human body colored by different colors to }
+In order to evaluate the impacts of different components of our hybrid system, a series of experiments are conducted. We first show the re-projection error of different methods. Then we quantitatively analyze the reconstruction quality using a ground-truth model scanned by an accurate Lidar scanner.  
+Finally we show the reconstructed models of human bodies under different pose to demonstrate the robustness of our method.
 
 \xj{Discussion on time.}
 
-\subsection{Re-projection error}
-\xj{Why do we need reprojection error while the goal is 3D reconstruction? }
-\md{The re-projection error describes the accuracy of the calibration result. We compute the re-projection and compare it to evaluate the effectivity of our global calibration step.}
-Using the 2D coordinates of the corners detected in the checkerboard images, we can achieve the 3D space coordinates $\mathbf{P_{c}}$ by triangulation. Then we re-project $\mathbf{P_{c}}$ to each view which the checkerboard can be seen using the extrinsic parameters obtained by different methods and compute the average re-projection error, as shown in Table 1.
+\noindent\textbf{Camera Calibration Accuracy.} 
+%
+The re-projection error describes the accuracy of the calibration system. 
+We compute the re-projection and compare it to evaluate the effectiveness of our global calibration step.
+%
+Using the 2D coordinates of the corners detected in the checkerboard images, we can achieve the 3D space coordinates $\mathbf{P_{c}}$ by triangulation \xj{using what camera parameters?}. 
+Then we re-project $\mathbf{P_{c}}$ to each view which the checkerboard can be seen using the extrinsic parameters obtained by different methods and compute the average re-projection error, as shown in Table~\ref{tab:reprojection}.
+
+
 \begin{table*}
 	\centering
-	\caption{Average re-projection error (pixels) of each camera using different methods. (a) results by Kalibr ~\cite{Maye2013Self}, (b) results by Kalibr ~\cite{Maye2013Self} with our registration step, (c) results by our global calibration method, (d) results by our integrated method. The re-projection error of (c) is the smaller and uniform in each view, while the results of other methods contain the accumulative error and the inconsistence. }
+	\caption{Average re-projection error (pixels) of each camera using different methods. (a) results by Kalibr~\cite{Maye2013Self}, (b) results by Kalibr ~\cite{Maye2013Self} with our registration step, (c) results by our global calibration method, (d) results by our integrated method. The re-projection error of (c) is the smaller and uniform in each view, while the results of other methods contain the accumulative error and the inconsistence. }
 	\label{tab:reprojection}
 	\begin{tabular}{lcccccccc}
 		\hline
@@ -33,24 +39,26 @@ Using the 2D coordinates of the corners detected in the checkerboard images, we 
 \end{table*}
 
 
-The reprojection error of the proposed global calibration method is the smaller among the different methods, which proves that the global optimization is quite effective. Although the registration step makes the model closer to the ground truth, it leads to the bigger reprojection error. That is because the aim of the registration step is to minimize the error caused by the inaccurate depth estimation, but not to optimize the camera parameters.
+The reprojection error of the proposed global calibration method is the smaller \xj{smallest?} among different methods, which proves that the global optimization is quite effective. 
+Although the registration step makes the model closer to the ground truth, it leads to bigger reprojection error. That is because the aim of the registration step is to minimize the error caused by the inaccurate depth estimation, but not to optimize the camera parameters.
 
 
-\subsection{Comparison with the ground truth}
-
-\xj{Explain why do you need this experiment.}
-\md{Due to the goal of our system is to achieve high-quality reconstruction model, we compare the results reconstructed by different methods with the ground truth.} 
-
-A plaster model of a human head is placed in the center of our multi-camera system and the RGB and depth images of it can be obtained.
-We scan the model using a 3D laser scanner and achieved a mesh of the plaster head with the error smaller than 0.04 mm.
-We consider the accurate mesh as the ground truth and compare it with the reconstructed 3D model using different methods.
-We compute the L2 distances of the point cloud to the mesh for each method. \md{For each point in the point cloud, we find the nearest point to it on the mesh, and compute the distance.} 
-\xj{How do you compute the L2 distance between a point cloud and a mesh? for each point in a point cloud, find the nearest point on the mesh?}
+\noindent\textbf{Reconstruction Quality.}
+%\xj{Explain why do you need this experiment.}
+The final goal of our system is to achieve a high-quality reconstruction model, we quantitatively compare the results reconstructed by different methods.
 %
-The average error is listed in Table~\ref{fig:distance}. As we can see, our method has the smaller error, which proves that it can achieve a high-quality model.
-We also show the distribution histogram of the error using different extrinsic parameters in Figure~\ref{fig:histogram}.
-\xj{Fig 3?}
-Similarly, the result of our method has the more accurate result.
+We generate a ground-truth model by scanning a plaster model of a human head using a 3D laser scanner with the scanning error smaller than 0.04 mm \xj{in what depth range?}. 
+%
+The model is placed in the center of our multi-camera system and the RGB and depth images of it can be obtained. \xj{how do you know where is the center? }
+%We consider the accurate mesh as the ground truth and compare it with the reconstructed 3D model using different methods.
+We compute the L2 distances of the fused point clouds to the ground-truth mesh for different variants of our method. 
+For each point $\vb{p}$ in the reconstructed point cloud, we search for its nearest point $\vb{q}$ on the mesh, and compute the distance $\|\vb{p}-\vb{q}\|$. 
+%
+The average error is listed in Table~\ref{fig:distance}. \xj{show a chart?} 
+As we can see, the reconstructed model combining SBA and registration has the smallest error, which proves that it can achieve a high-quality model.
+We also show the distribution histogram of the error using different extrinsic parameters in Figure~\ref{fig:histogram}. 
+Similarly, the result of our method has the most accurate result.
+\xj{Combine the distribution figure with table as two charts.}
 
 \begin{figure*}[ht]
   \centering
@@ -82,10 +90,9 @@ Similarly, the result of our method has the more accurate result.
 \label{fig:histogram}
 \end{figure*}
 
-\subsection{Reconstruction results of human bodies}
-
-We reconstruct the 3D point clouds of a human body standing in the center of our multi-camera system using various methods. \md{We mark the point cloud in different views with different colors to show the quality of the fusion results. Figure~\ref{fig:pointcloud} shows the results which demonstrate our algorithm. As we can see, the model reconstructed by our hybrid system has the highest quality.}
-\xj{explain the results. show different views. }.
+\noindent \textbf{More Reconstructed Models.}
+%
+We reconstruct the 3D point clouds of a human body standing in the center of our multi-camera system using various methods.  We mark the point cloud in different views with different colors to show the quality of the fusion results. Figure~\ref{fig:pointcloud} shows the results which demonstrate our algorithm. As we can see, the model reconstructed by our hybrid system has the highest quality. 
 
 \xj{Show at least three groups of results, in different human pose.}
 
