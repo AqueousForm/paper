@@ -1,29 +1,57 @@
 
 \section{Introduction}
-Real-time indoor 3D reconstruction from multiple views has become more and more prevalent in recent years~\cite{dou2016fusion4d,orts2016holoportation}. High-quality reconstruction has bright future in many applications like telecommunication and VR Games. Compared with the systems based on a single camera, multi-camera systems using RGB cameras have many advantages such as a wider horizon. Meanwhile, to achieve high-quality results, other kinds of sensors are also widely used in the reconstruction system usually, like Near Infra-Red (NIR) cameras to estimate depth maps. Hence, the quality of the final reconstruction result depends on many aspects in a multi-camera system, especially on the accuracy of the camera parameters and depth maps.
+Real-time indoor 3D reconstruction from multiple views has become more and more prevalent in recent years~\cite{dou2016fusion4d,orts2016holoportation}. High-quality reconstruction has bright future in many applications like telecommunication and VR Games. Compared with the systems based on a single camera, multi-camera systems using RGB cameras have many advantages such as a wider horizon. Meanwhile, to achieve high-quality results, other kinds of sensors are also widely used in the reconstruction system, such as Near Infra-Red (NIR) cameras to estimate depth maps. Hence, the quality of the final reconstruction result depends on many aspects in a multi-camera system, especially on the accuracy of the camera parameters and depth maps.
 
-For a single camera system, the accurate intrinsic parameters can be achieved by many internal calibration methods or toolboxes~\cite{zhang2000flexible,zhang2004camera}. Many efficient methods have also been developed for the calibration of different types of multi-camera calibration.
-One widely proposed approach for the multi-camera calibration is to use special calibration objects, such as patterns, rig or similar for high accuracy results.
-Li et al. proposed a toolbox to calibrate the system using a specially designed calibration pattern based on feature detection~\cite{Li2013A}. The pattern can be automatically detected even if the pattern is partially visible in an image. The toolbox yields good results especially on the systems with a few cameras (three or four) with small overlapping fields of view.
-Zhao and Liu proposed an algorithm based on 1D objects which works well on a triple camera system~\cite{zhao2008practical}. They use a 20cm long stick with 3 markers rotates around a fixed point as the calibration object. The algorithm integrates a rank-4 factorization with the standard 1D camera calibration method and is much more convenient than plane-based algorithms.
-Svoboda et al. gives a method that only requires a bright-spot object like a laser pointer~\cite{svoboda2005convenient}. Waving the object which can be easily detected in each image through the working space is the only work requested.
-Kalibr~\cite{Maye2013Self} is a free toolbox that solves the multiple camera calibration problems.
-It could produce a good estimate but requires that neighboring cameras have overlapping fields of view.
-However, if the system contains many cameras and they do not share the same overlapping fields of view, the calibration process should be simply repeated for each pair of cameras. Meanwhile, repeating the independent pairwise calibration may result in accumulated error.
+For a single camera, its intrinsic parameters can be accurately estimated by many internal calibration techniques~\cite{zhang2000flexible,zhang2004camera}. 
+For multi-camera calibration, a series of approaches have been proposed as well. 
+One widely used technique for accurate calibration is to use specialized calibration objects, such as planar patterns, rig and so on.
+%
+Li et al. proposed a specially designed calibration pattern for feature detection and accurate matching~\cite{Li2013A}. %The pattern can be automatically detected even if the pattern is partially visible in an image. 
+This method works well especially on the systems with a few cameras (three or four) with small overlapping fields of view.
+%
+Zhao and Liu proposed an algorithm based on 1D objects for a triple camera system~\cite{zhao2008practical}. 
+A 20cm long stick with 3 markers rotates around a fixed point is used as the calibration object. 
+The algorithm integrates a rank-4 factorization with the standard 1D camera calibration method and is much more convenient than plane-based algorithms.
+Svoboda et al. proposed a method that only requires a bright-spot object like a laser pointer~\cite{svoboda2005convenient}. 
+Waving the object which can be easily detected in each image through the working space is the only work requested.
+%
+Kalibr~\cite{Maye2013Self} is a free toolbox that solves the multiple camera calibration problems by sequentially calibrating neighboring cameras those have overlapping fields of view.
+%It could produce a good estimate but requires that neighboring cameras have overlapping fields of view. \xj{Every calibration system requires overlapping regions..}
+%However, if the system contains many cameras those do not share the same overlapping fields of view, the calibration process should be simply repeated for each pair of cameras.
+%
+However, this sequential calibration process results in accumulated errors. \xj{Do they use special calibration object?}
+%
 Liu et al.~\cite{Liu2015Algorithm} proposed an algorithm for camera parameter adjustment using a checkerboard. They divide a four-camera system into six two-camera subsystems. With a checkerboard placed vertically within the common sight field of the cameras, which is both printed on two sides, the corners can be seen in each subsystem and the adjustment can be done. However, if there are more cameras in the system, it is hard for all the cameras to capture a checkerboard at the same time due to the oblique angle.
 
-Another kind of methods which is commonly used is self-calibration. These methods do the calibration without any special calibration objects which are more convenient. However they are usually not so accurate as the methods using special calibration objects and requiring special constraints or correspondences from the images.
-Bundler~\cite{snavely2006photo} is a structure-from-motion toolbox using the unordered images captured from different views. The pose of all cameras can be estimated simultaneously with the 3D point positions.
-It uses SIFT keypoint detector~\cite{lowe2004distinctive} which works well on outdoor scenes but weak on indoor cases because of the lack of rich textures.
-Vasconcelos et al.~\cite{vasconcelos2012minimal} proposed a solution to calibrate a camera with two other calibrated cameras using independent pairwise point correspondences.
-Bushnevskiy et al.~\cite{bushnevskiy2016multicamera} presented a novel approach for the estimation of the geometry of the multi-camera system. The algorithm enforces constraints arising from the visible epipoles and is especially suitable for dome-like indoor cases.
 
-All these methods use RGB images to calibrate the multi-camera system and achieve good results. However, not only camera parameters, another important influencing factor is the depth estimation of the target model. Many research have been done on the depth estimation~\cite{scharstein,Bleyer2011PatchMatch}, whereas the error can not be eliminated entirely.
-We proposed a registration step to diminish the influence of the error caused by depth estimation to achieve an accurate model.
+Another category of multi-camera calibration techniques is self-calibration, which does not require any specialized objects. 
+However these methods are very sensitive to the richness of textures in the captured scene and usually suffers from low accuracy. 
+%
+Bundler~\cite{snavely2006photo} is a structure-from-motion technique to simultaneously estimate the camera parameters and the 3D point positions from a set of unordered images.
+%
+It uses SIFT keypoint detector~\cite{lowe2004distinctive} which works well on outdoor scenes but typically fails to find enough point correspondences in indoor cases.
+%
+Vasconcelos et al.~\cite{vasconcelos2012minimal} proposed a solution to calibrate a camera with two other calibrated cameras.
+Bushnevskiy et al.~\cite{bushnevskiy2016multicamera} presented a novel approach for the estimation of the geometry of the multi-camera system. \xj{what do you mean by the geometry here?}
+The algorithm enforces constraints arising from the visible epipoles and is especially suitable for dome-like indoor cases.
+
+All these methods use RGB images to calibrate the multi-camera system and achieve good results. \xj{if these methods work well on calibration, why do you use a global calibration system?}
+%
+However, not only camera parameters, another important influencing factor is the depth estimation of the target model. 
+Intensive research has been done on the depth estimation problem~\cite{scharstein,Bleyer2011PatchMatch}, whereas the error can not be eliminated entirely.
+%
+Rather than improve the quality of depth estimation, we propose to use a 3D registration step to diminish the influence of the depth error in a fused model.
+%
 A lot of work have been done in the registration of point sets. 
 Iterative Closest Point (ICP)~\cite{Besl1992A} is the most popular registration method, the algorithm performs well with proper initialization.
-Many coarse registration methods have also been proposed~\cite{Aiger:2008:CSR:1360612.1360684,5152473} with no assumption about the starting positions.
-For multiple point-set registration, different from using the sequential pairwise registration strategy, Evangelidis et al.~\cite{Evangelidis-ECCV-2014} proposed a method treats all the point sets on an equal footing, and joint multiple-set registration globally. They use a Generative Model and the registration is cast into a clustering problem. However, with no pairwise correspondence, if two point clouds do not have overlapping points, which may happen in multi-camera system, the algorithm may not work well.
+%
+Many coarse registration methods have also been proposed~\cite{Aiger:2008:CSR:1360612.1360684,5152473} with no assumption about the starting positions. \xj{what do you mean by coarse registration?}
+%
+For multiple point-set registration, different from using the sequential pairwise registration strategy, Evangelidis et al.~\cite{Evangelidis-ECCV-2014} proposed a method that treats all the point sets on an equal footing, and joint multiple-set registration globally. \xj{error?}
+%
+They use a generative model and the registration is cast into a clustering problem. 
+However, without pairwise correspondences, if two point clouds do not have overlapping points, which may happen in multi-camera system, the algorithm may not work well.
+\xj{how do you do for point clouds do not have overlapping points?}
 
 In this paper, we present a hybrid system integrating both calibration and registration to achieve high-quality reconstruction results. To avoid from accumulative error caused by the repetitive calibration for each pair of cameras, we use a global camera calibration method and optimize the camera parameters consistently. Furthermore, we use the point cloud registration method to register the result of the reconstruction. This can effectively reduce the impact results from the error of depth estimation and obtain a high-quality 3D reconstruction.
 

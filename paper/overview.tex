@@ -1,4 +1,4 @@
-\section{overview}
+\section{Algorithm}
 \label{sec:overview}
 
 \xj{I add the problem definition here.}
@@ -10,7 +10,8 @@ A multi-camera system is set up to capture objects in an indoor scene, as shown 
 %
 $K$ ($K=8$) camera pods are installed around the working space looking inwards for a full capture.
 Each camera pod consists of one color camera and two Near Infra-Red cameras. A laser pointer is used to produce special patterns. From the pair of images of the projected patterns captured by the two NIR cameras, a depth map $D_k$ can be estimated using PatchMatch stereo algorithm~\cite{Bleyer2011PatchMatch}.
-There are also several alternative depth cameras or depth estimation algorithm to obtain the depth map of each view. Most of them produce a rough depth map with noise and errors, as Fig.~\ref{fig:depthmap} shows.
+There are also several alternative depth cameras or depth estimation algorithm to obtain the depth map of each view. Most of them produce a rough depth map with noise and errors.
+As Fig.~\ref{fig:deptherror} shows, the estimated depth map encounters large distortions on the boundary of the human body, and missing data in the head area.
 How to improve the quality of depth map is beyond the scope of this paper.
 
 \begin{figure}
@@ -21,6 +22,39 @@ How to improve the quality of depth map is beyond the scope of this paper.
 \end{figure}
 
 
+
+\begin{figure*}[ht]
+	\centering
+	\subfigure[]{
+		\begin{minipage}[c]{.22\linewidth}
+			\centering
+			\includegraphics[width=4cm]{image/depth_error_rgb.png}
+		\end{minipage}
+	}%
+	\subfigure[]{
+		\begin{minipage}[c]{.22\linewidth}
+			\centering
+			\includegraphics[width=4cm]{image/depth_error_depth.png}
+		\end{minipage}
+	}
+	\subfigure[]{
+		\begin{minipage}[c]{.22\linewidth}
+			\centering
+			\includegraphics[width=4cm]{image/depth_error_pc.png}
+		\end{minipage}
+	}
+	\subfigure[]{
+		\begin{minipage}[c]{.22\linewidth}
+			\centering
+			\includegraphics[width=4cm]{image/depth_error_pc_2.png}
+		\end{minipage}
+	}
+	\caption{Errors in depth estimation. (a) RGB; (b) Depth; (c) The point cloud reconstructed from RGBD data. (d) Another view of the point cloud. The distortion of the head region (in the red box) is caused by the inaccurate depth estimation. }
+	\label{fig:deptherror}
+\end{figure*}
+
+
+
 %
 Under the assumption of pinhole camera, each camera has a group of parameters including the intrinsic matrix $K$ and extrinsic matrix $M$ to project a point $P$ in the 3D space to its image plane as
 \begin{equation}\label{eq:cam-proj}
@@ -29,18 +63,22 @@ z_{p}\mathbf{x}=\mathbf{K}\mathbf{M}\mathbf{p},
 where $\mathbf{p}=(x,y,z,1)^{T}$ is the homogeneous coordinate of $P$, and $\mathbf{x}=(u,v,1)^{T}$ is the homogeneous coordinate of its projected point on the image plane.
 %
 
+
 From the depth map estimated by each camera pod, a partial point cloud can be reconstructed by back-projecting each pixel in the depth map into the 3D space according to the pose parameters of each camera.
 %
 A 3D model can be obtained by fusing the $K$ point clouds.
 %
 %
-Ideally, with accurate depth $z_p$ of each image point $\vb{x}$, and accurate camera parameters $\camin$ and $\camex$, the image pixels captured in different views can be back-projected to the 3D space and well aligned to a 3D point $\vb{p}$.
-To reconstruct a high-quality model, our algorithm consists of two main parts.
+Ideally, with the accurate depth $z_p$ of each image point $\vb{x}$, and accurate camera parameters $\camin$ and $\camex$, the image pixels captured in different views can be back-projected to the 3D space and well aligned to a 3D point $\vb{p}$.
+%
+However, due to the unavoidable error and noises in depth maps, our framework relies on two main parts to reconstruct a high-quality model.
 %
 The first part is a global camera calibration method to estimate the camera parameters $\{\camin_k, \camex_k\}^{K}_{k=1}$ as accurate as possible, as described in Sec.~\ref{sec:global-calib}.
 The second is a registration method to produce 3D point clouds as consistent as possible from in-accurate depth $z_p$, as described in Sec.~\ref{sec:registration}.
 \xj{Explain with a pipeline figure.}
 \md{To Do}
+
+
 
 
 \comments{
@@ -52,11 +90,4 @@ With the transform of the registration, the error caused by depth estimation can
 Finally, we compare the reconstruction results using different methods. We also compute the reprojection error and use a plaster model as the ground truth to verify the effectivity of our algorithm, as described in Sec.~\ref{sec:Results}.
 \xj{Show a system pipeline.}
 }
-
-\begin{figure}
-%	\includegraphics[width=\columnwidth]{}
-\vspace{2cm}
-	\caption{Depth maps generated at different views. The depth maps are inaccurate, incomplete and noisy. \xj{Add depth map examples}\md{To Do}}
-	\label{fig:depthmap}
-\end{figure}
-
+ 

@@ -1,9 +1,9 @@
 
-\section{Global Camera Calibration}
+\subsection{Global camera calibration}
 \label{sec:global-calib}
 
 
-To calibrate the multiple cameras, we follow the common framework consists of searching for feature point correspondences and minimizing reprojection errors.
+To calibrate the multi-camera system, we follow the common framework that consists of searching for feature point correspondences and minimizing reprojection errors.
 %
 Because of the lack of the features in indoor scenes and the high requirement of the quality of the calibration, we use a $6\times7$ checkerboard with squares of 117 mm which can be made easily for the accuracy and robustness.
 
@@ -15,17 +15,17 @@ The checkerboard is simultaneously seen in three or four views usually.
 %
 Our system is flexible enough while it does not require that the checkboard must be visible under all points of view.
 %
+We also use the images with checkerboard on the ground which allows the checkerboard corners can be seen in all the 8 cameras, as shown in Figure~\ref{fig:checkerboard}. 
+This will help to reduce the accumulative error and inconsistence caused by the pairwise calibration.
+
+%
 Then the 42 corners on the checkerboard can be detected in each local group.
 %
 For each time $t$, denote the group of cameras that can see the checkboard corners as $\mathcal{C}^t$. The 3D coordinates of the 42 corner points are denoted as $\{\vb{p}^{t}_{i}\}_{i=1,\ldots, 42}$, while their corresponding 2D coordinates detected in each image captured by the camera $c_j \in \mathcal{C}^{t}$ are $\{\vb{x}^{t}_{ji}\}$.
-
-
-
-While the user holding the checkboard moves around, we can capture $T$ groups of checkboard images and detect the corners at each time.
 %
-To make the optimization result be more consistent to the whole system, we also use the images with checkerboard on the ground which allows the checkerboard corners can be seen in all the 8 cameras, as shown in Figure~\ref{fig:checkerboard}. This will help to reduce the accumulative error and inconsistence caused by the pairwise calibration.
-%Typically, our system could 
-\xj{Discussion on the range of T.}
+While the user holding the checkboard moves around, we can capture $T$ groups of checkboard images and combine them together to globally estimate the camera parameters.
+%
+
 
 According to the projection equation defined in Eq.~\ref{eq:cam-proj}, our calibration method optimizes the camera parameters to minimize the projection errors. Considering the $T$ groups of images together, the projection error is defined as:
 %
@@ -49,6 +49,8 @@ Then we estimate the 3D coordinates $\mathbf{p}^{t}_{ji}$ of each corner from th
 %where $n$ is the number of the views that the checkerboard can be seen in at the same time.
 %
 After the initial calibration, we globally optimize the extrinsic parameters and the 3D coordinates of each corner.
+Typically, $T=20$ groups produce good enough results... \xj{Discussion on the range of T.} 
+As shown in Fig.~\ref{fig:}, the projected error ...
 \xj{Show a figure to compare the reprojected points before/after SBA.}\md{To Do}
 
 %\subsection{Multi-camera system}
