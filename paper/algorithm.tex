@@ -3,31 +3,31 @@
 \label{sec:global-calib}
 
 
-To calibrate the multiple cameras, we follow the common framework consists of searching for feature point correspondences and minimizing reprojection errors. 
+To calibrate the multiple cameras, we follow the common framework consists of searching for feature point correspondences and minimizing reprojection errors.
 %
-Because of the lack of the features in indoor scenes and the high requirement of the quality of the calibration, we use a $6\times7$ checkerboard with squares of 117 mm which can be made easily for the accuracy and robustness. 
+Because of the lack of the features in indoor scenes and the high requirement of the quality of the calibration, we use a $6\times7$ checkerboard with squares of 117 mm which can be made easily for the accuracy and robustness.
 
 %
-An user holding the checkboard could move in front of the cameras freely in the working space. 
-At each moment, the 8 cameras capture images simultaneously. 
+An user holding the checkboard could move in front of the cameras freely in the working space.
+At each moment, the 8 cameras capture images simultaneously.
 %
-The checkerboard is simultaneously seen in three or four views usually. 
+The checkerboard is simultaneously seen in three or four views usually.
 %
 Our system is flexible enough while it does not require that the checkboard must be visible under all points of view.
 %
 Then the 42 corners on the checkerboard can be detected in each local group.
 %
-For each time $t$, denote the group of cameras that can see the checkboard corners as $\mathcal{C}^t$. The 3D coordinates of the 42 corner points are denoted as $\{\vb{p}^{t}_{i}\}_{i=1,\ldots, 42}$, while their corresponding 2D coordinates detected in each image captured by the camera $c_j \in \mathcal{C}^{t}$ are $\{\vb{x}^{t}_{ji}\}$. 
+For each time $t$, denote the group of cameras that can see the checkboard corners as $\mathcal{C}^t$. The 3D coordinates of the 42 corner points are denoted as $\{\vb{p}^{t}_{i}\}_{i=1,\ldots, 42}$, while their corresponding 2D coordinates detected in each image captured by the camera $c_j \in \mathcal{C}^{t}$ are $\{\vb{x}^{t}_{ji}\}$.
 
 
 
-While the user holding the checkboard moves around, we can capture $T$ groups of checkboard images and detect the corners at each time. 
+While the user holding the checkboard moves around, we can capture $T$ groups of checkboard images and detect the corners at each time.
 %
-To make the optimization result be more consistent to the whole system, we also use the images with checkerboard on the ground which allows the checkerboard corners can be seen in all the 8 cameras, as shown in Figure~\ref{fig:checkerboard}. This will help to reduce the accumulative error and inconsistence caused by the pairwise calibration. 
-%Typically, our system could
+To make the optimization result be more consistent to the whole system, we also use the images with checkerboard on the ground which allows the checkerboard corners can be seen in all the 8 cameras, as shown in Figure~\ref{fig:checkerboard}. This will help to reduce the accumulative error and inconsistence caused by the pairwise calibration.
+%Typically, our system could 
 \xj{Discussion on the range of T.}
 
-According to the projection equation defined in Eq.~\ref{eq:cam-proj}, our calibration method optimizes the camera parameters to minimize the projection errors. Considering the $T$ groups of images together, the projection error is defined as: 
+According to the projection equation defined in Eq.~\ref{eq:cam-proj}, our calibration method optimizes the camera parameters to minimize the projection errors. Considering the $T$ groups of images together, the projection error is defined as:
 %
 \begin{equation} \label{eq:global-proj-error}
 E(\mathbf{M}_{j},\mathbf{p}^{t}_{i})=\sum_{t}\sum_{j\in \mathcal{C}^{t}}\sum_{i} \big( \hat{\vb{x}}(\vb{K}_{j},\mathbf{M}_{j}, \vb{p}^{t}_{i})-\mathbf{x}^{t}_{ji} \big)^{2},
@@ -36,20 +36,20 @@ E(\mathbf{M}_{j},\mathbf{p}^{t}_{i})=\sum_{t}\sum_{j\in \mathcal{C}^{t}}\sum_{i}
 where $\hat{\vb{x}}(\vb{K}_{j},\mathbf{M}_{j}, \mathbf{p}_{i})$ is the estimated 2D positions of a 3D point $\vb{p}^{t}_{i}$ in the image plane of the camera $c_j$ with its parameters $\camin_j$ and $\camex_j$.
 
 
-The above optimization could be solved by the Sparse Bundle Adjustment package~\cite{lour09}, which uses a Levenberg-Marquardt technique to optimize the parameters iteratively. 
-Inevitably, this algorithm only finds a local optimal. 
-A good initialization is required to get a good results. 
+The above optimization could be solved by the Sparse Bundle Adjustment package~\cite{lour09}, which uses a Levenberg-Marquardt technique to optimize the parameters iteratively.
+Inevitably, this algorithm only finds a local optimal.
+A good initialization is required to get a good results.
 
 
 Though sequentially calibrating the neighboring cameras leads to accumulated errors, it could provide an initialization for the global optimization.
-% 
-We use the toolbox Kalibr~\cite{Maye2013Self} to obtain the intrinsic parameters and the initial extrinsic parameters of neighboring cameras sequentially. 
+%
+We use the toolbox Kalibr~\cite{Maye2013Self} to obtain the intrinsic parameters and the initial extrinsic parameters of neighboring cameras sequentially.
 %
 Then we estimate the 3D coordinates $\mathbf{p}^{t}_{ji}$ of each corner from the corresponding 2D coordinates by triangulation.
 %where $n$ is the number of the views that the checkerboard can be seen in at the same time.
 %
 After the initial calibration, we globally optimize the extrinsic parameters and the 3D coordinates of each corner.
-\xj{Show a figure to compare the reprojected points before/after SBA.}
+\xj{Show a figure to compare the reprojected points before/after SBA.}\md{To Do}
 
 %\subsection{Multi-camera system}
 
@@ -98,4 +98,4 @@ The $\mathbf{K}$ and initial $\mathbf{M}$ of each camera are calibrated by Kalib
 \end{figure}
 
 
- 
+
