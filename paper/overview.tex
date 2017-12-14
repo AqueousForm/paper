@@ -1,9 +1,6 @@
 \section{Algorithm}
 \label{sec:overview}
 
-\xj{I add the problem definition here.}
-
-
 %\textbf{Problem Definition.}
 A multi-camera system is set up to capture objects in an indoor scene, as shown in Fig.~\ref{fig:rig}.
 %The cameras in our 3D reconstruction system are placed on the periphery of the room pointing inwards, only the neighboring cameras have overlapping fields of view. \xj{what is the point of this overlapping fov?}
@@ -34,7 +31,7 @@ How to improve the quality of depth map is beyond the scope of this paper.
 	\subfigure[]{
 		\begin{minipage}[c]{.22\linewidth}
 			\centering
-			\includegraphics[width=4cm]{image/depth_error_depth.png}
+			\includegraphics[width=4cm]{image/depth_error_depth2.png}
 		\end{minipage}
 	}
 	\subfigure[]{
@@ -75,10 +72,6 @@ However, due to the unavoidable error and noises in depth maps, our framework re
 %
 The first part is a global camera calibration method to estimate the camera parameters $\{\camin_k, \camex_k\}^{K}_{k=1}$ as accurate as possible, as described in Sec.~\ref{sec:global-calib}.
 The second is a registration method to produce 3D point clouds as consistent as possible from in-accurate depth $z_p$, as described in Sec.~\ref{sec:registration}.
-\xj{Explain with a pipeline figure.}
-\md{To Do}
-
-
 
 
 \comments{
@@ -90,4 +83,4 @@ With the transform of the registration, the error caused by depth estimation can
 Finally, we compare the reconstruction results using different methods. We also compute the reprojection error and use a plaster model as the ground truth to verify the effectivity of our algorithm, as described in Sec.~\ref{sec:Results}.
 \xj{Show a system pipeline.}
 }
- 
+

@@ -18,7 +18,7 @@
 
 \newcommand{\comments}[1]{}
 \newcommand{\xj}[1]{\textcolor{red}{(xuejin:#1)}}
-\newcommand{\md}[1]{\textcolor{purple}{#1}} 
+\newcommand{\md}[1]{\textcolor{purple}{#1}}
 \newcommand{\camin} {\mathbf{K}}
 \newcommand{\camex}{\mathbf{M}}
 \newcommand{\vb}[1]{\mathbf{#1}}
@@ -39,8 +39,11 @@
 %
 % Single address.
 % ---------------
-\name{Paper 1375}
-\address{ }
+\name{Zhehan Song, Xuejin Chen, Zichen Gu, Wei Hu}
+\address{ 
+University of Science and Technology of China 
+}
+
 
 
 \maketitle
@@ -48,17 +51,17 @@
 
 %
 \begin{abstract}
-With the development of virtual and augmented reality, 3D reconstruction for indoor scenes based on multi-camera systems has become increasingly popular recently. 
+With the development of virtual and augmented reality, 3D reconstruction for indoor scenes based on multi-camera systems has become increasingly popular recently.
 %
-The quality of reconstructions from images relies on many factors, including the multi-view camera calibration accuracy and the depth estimation quality in each single view. 
+The quality of reconstructions from images relies on many factors, including the multi-view camera calibration accuracy and the depth estimation quality in each single view.
 %
 In this paper, we propose a hybrid system which integrates a global camera parameter estimation and 3D model registration instead of the traditional pairwise framework, to produce high quality 3D models.
-%replace the traditional pairwise relations of both camera and model fusion to a global framework. 
+%replace the traditional pairwise relations of both camera and model fusion to a global framework.
 %
-First, a global bundle adjustment is adopted to increase the accuracy of camera pose estimation. 
-%We use checkerboard corners to optimize the camera extrinsic parameters globally which are obtained by pairwise camera calibration methods. 
-Second, a point cloud registration is used to fuse the inaccurate depth maps to a 3D model. 
-We use the Iterative Closest Point (ICP) algorithm to register the point clouds estimated from different views to minimize the model deviation. 
+First, a global bundle adjustment is adopted to increase the accuracy of camera pose estimation.
+%We use checkerboard corners to optimize the camera extrinsic parameters globally which are obtained by pairwise camera calibration methods.
+Second, a point cloud registration is used to fuse the inaccurate depth maps to a 3D model.
+We use the Iterative Closest Point (ICP) algorithm to register the point clouds estimated from different views to minimize the model deviation.
 The experimental results show the promising effect of our method to produce high-quality models.
 \end{abstract}
 %
