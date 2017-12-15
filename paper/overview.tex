@@ -6,10 +6,10 @@ A multi-camera system is set up to capture objects in an indoor scene, as shown 
 %The cameras in our 3D reconstruction system are placed on the periphery of the room pointing inwards, only the neighboring cameras have overlapping fields of view. \xj{what is the point of this overlapping fov?}
 %
 $K$ ($K=8$) camera pods are installed around the working space looking inwards for a full capture.
-Each camera pod consists of one color camera and two Near Infra-Red (NIR) cameras. A laser pointer is used to produce special patterns. 
+Each camera pod consists of one color camera and two Near Infra-Red (NIR) cameras. A laser pointer is used to produce special patterns.
 From a pair of images of the projected patterns captured by the two NIR cameras, a depth map $D_k$ can be estimated using the PatchMatch stereo algorithm~\cite{Bleyer2011PatchMatch}.
 There are also several alternative depth cameras or depth estimation algorithm to obtain the depth map of each view. Most of them produce a rough depth map with noise and errors.
-As Fig.~\ref{fig:deptherror} shows, the estimated depth map encounters large distortions on the boundary of the human body, and missing data in the head area.
+As Fig.~\ref{fig:deptherror} shows, the estimated depth map encounters distortions on the boundary of the human body, and missing data in the head area.
 How to improve the quality of depth map is beyond the scope of this paper.
 
 \begin{figure}

@@ -15,9 +15,9 @@ The misalignment typically occurs at some parts of the human body, such as the h
 Therefore, we use the Iterative Closest Point (ICP) algorithm~\cite{Besl1992A} to slightly adjust the rigid transformation between two partial point clouds, and fuse the transformed point clouds to balance out the depth errors.
 %
 
-We choose the point cloud of one view as the reference, and compute the transformation of the point clouds from its neighboring views to it using the ICP algorithm. 
-We then merge the point clouds as a new reference. 
-The other views are registered sequentially in a similar way. 
+We choose the point cloud of one view as the reference, and compute the transformation of the point clouds from its neighboring views to it using the ICP algorithm.
+We then merge the point clouds as a new reference.
+The other views are registered sequentially in a similar way.
 When all the point clouds of different views are registered, a high-quality 3D model can be achieved, as shown in Fig.~\ref{fig:3Dmodel}.
 \begin{figure}[ht]
 %
@@ -35,7 +35,7 @@ When all the point clouds of different views are registered, a high-quality 3D m
   \centerline{(b)}\medskip
 \end{minipage}
 %
-\caption{An 3D model after ICP registration. (a) The front side of the model. (b) The back side of the model. }
+\caption{A 3D model after ICP registration. (a) The front side of the model. (b) The back side of the model. }
 \label{fig:3Dmodel}
 \end{figure}
 

@@ -22,25 +22,25 @@ The model is placed in our multi-camera system and the RGB and depth images of i
 We compute the L2 distances of the fused point clouds to the ground-truth mesh for different variants of our method.
 For each point $\vb{p}$ in the reconstructed point cloud, we search for its nearest point $\vb{q}$ on the mesh, and compute the distance $\|\vb{p}-\vb{q}\|$.
 %
-We divide the distance from 0 mm to 40 mm into 16 intervals and count the total number of the points in each interval. The distribution diagram of the distances between the point clouds to the ground truth using various methods is shown in Fig.~\ref{fig:error-distribution}. 
+We divide the distance from 0 mm to 40 mm into 16 intervals and count the total number of the points in each interval. The distribution diagram of the distances between the point clouds to the ground truth using various methods is shown in Fig.~\ref{fig:error-distribution}.
 %
-We test four variants: (a) the method Kalibr~\cite{Maye2013Self} that only uses local calibration of neighboring cameras; (b) Kalibr+ICP, which uses the ICP registration of point clouds reconstructed using the camera parameters estimated using Kalibr; (c) SBA only, which directly merge point clouds after our global calibration using SBA; (d) SBA+ICP, which refines the transformations between point clouds using ICP based on our global camera calibration.
+We test four variants: (a) the method Kalibr~\cite{Maye2013Self} that only uses local calibration of neighboring cameras; (b) Kalibr+ICP, which uses the ICP registration of point clouds reconstructed using the camera parameters estimated by Kalibr; (c) SBA only, which directly merges point clouds after our global calibration using SBA; (d) SBA+ICP, which refines the transformations between point clouds using ICP based on our global camera calibration.
 %
-As we can see, the number of the points with small distance increases obviously after the optimization and registration step we proposed. We compute the mean and standard deviation of the distances, and show the error bars of the results using various methods in Figure~\ref{fig:errorbar}. The reconstructed model combining the global calibration and registration has the smallest error, which proves that the system can produce a high-quality model.
+As we can see, the number of the points with small distance increases obviously after the optimization and registration step we proposed. We compute the mean and standard deviation of the distances, and show the error bars of the results using various methods in Fig.~\ref{fig:errorbar}. The reconstructed model combining the global calibration and registration has the smallest error, which proves that the system can produce a high-quality model.
 
 
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=\columnwidth]{image/distribution.jpg}
-	\caption{The distribution of the L2 distances between corresponding points in the point cloud reconstructed using different methods and the ground truth. \xj{Use Kalibr, Kalibr+ICP, SBA, SBA+ICP in the figure to replace ABCD.}}
+	\includegraphics[width=\columnwidth]{image/distribution.eps}
+	\caption{The distribution of the L2 distances between corresponding points in the point cloud reconstructed using different methods to the ground truth.}
 	\label{fig:error-distribution}
 \end{figure}
 
 \begin{figure}[ht]
 	\centering
-	\includegraphics[width=\columnwidth]{image/errorbar.jpg}
-	\caption{The error bars of the L2 distances of the point cloud reconstructed using different methods to the ground truth. \comments{(A) results by Kalibr~\cite{Maye2013Self}, (B) results by Kalibr~\cite{Maye2013Self} with our registration step, (C) results by our global calibration method, (D) results by our integrated method.} \xj{Use Kalibr, Kalibr+ICP, SBA, SBA+ICP in the figure to replace ABCD.}}
+	\includegraphics[width=\columnwidth]{image/errorbar.eps}
+	\caption{The error bars of the L2 distances of the point cloud reconstructed using different methods to the ground truth.}
 	\label{fig:errorbar}
 \end{figure}
 \comments{
@@ -69,16 +69,16 @@ As we can see, the number of the points with small distance increases obviously 
 
 \noindent \textbf{More Reconstructed Models.}
 %
-We reconstruct the 3D point clouds of a human body standing in our multi-camera system using various methods.  We mark the point cloud in different views with different colors to show the quality of the fusion results. Fig.~\ref{fig:model_poses} shows the reconstruction results in different human pose which demonstrates our algorithm.\xj{demonstrates what of our algorithm?} 
+We reconstruct the 3D point clouds of a human body standing in our multi-camera system using various methods.  We mark the point cloud in different views with different colors to show the quality of the fusion results. Fig.~\ref{fig:model_poses} shows the reconstruction results in different human pose which demonstrates the effectiveness of our algorithm.
 
-The first row in Fig.~~\ref{fig:model_poses} shows the back side of a human body model using various methods. The point clouds in result (a) are distinctly separated from other views, as the pink and green views cover the whole surface of the model. Result (b) becomes a little better while the green view still covers the right side of the body. The point clouds align quite well in result (c) with small blemishes, the azure view is inside the model. (d) shows a well-aligned model. 
-The second row in Fig.~~\ref{fig:model_poses} shows the left side of a human. The grey view in result (a) covers the surface and the black view is nearly inside the model especially on the shoulders and arms. Result (b) becomes a little better in black and grey view, however the green view covers the front of the model. There are similar problems in result (c), as the blue view covers the surface of the arm and head. Result (d) shows a well-aligned model, especially for the leg and arm with less separation between different views. 
-The third row in Fig.~~\ref{fig:model_poses} shows the front of a human. The grey view covers the most surface of the right arm and the right chest, meanwhile the black view is inside the model in result (a). The point clouds align a little well in result (b), however the yellow view covers the left side of the body, and the blue view is nearly covered by other views. On the contrary, the blue view covers the right side of the body in result (c), especially on the arm and the shoulder. The point clouds more or less separated from other views in these results, while (d) shows a well-aligned model.
+The first row in Fig.~\ref{fig:model_poses} shows the back side of a human body model using various methods. The point clouds in result (a) are distinctly separated from other views, as the pink and green views cover the whole surface of the model. Result (b) becomes a little better while the green view still covers the right side of the body. The point clouds align quite well in result (c) with small blemishes, the azure view is inside the model. (d) shows a well-aligned model.
+The second row in Fig.~\ref{fig:model_poses} shows the left side of a human. The grey view in result (a) covers the surface and the black view is nearly inside the model especially on the shoulders and arms. Result (b) becomes a little better in black and grey view, however the green view covers the front of the model. There are similar problems in result (c), as the blue view covers the surface of the arm and head. Result (d) shows a well-aligned model, especially for the leg and arm with less separation between different views.
+The third row in Fig.~\ref{fig:model_poses} shows the front of a human. The grey view covers the most surface of the right arm and the right chest, meanwhile the black view is inside the model in result (a). The point clouds align a little well in result (b), however the yellow view covers the left side of the body, and the blue view is nearly covered by other views. On the contrary, the blue view covers the right side of the body in result (c), especially on the arm and the shoulder. The point clouds more or less separated from other views in these results, while (d) shows a well-aligned model.
 As we can see, the model reconstructed by our hybrid system has the highest quality.
 \begin{figure}[ht]
 	\centering
 	\includegraphics[width=\columnwidth]{image/model.eps}
-	\caption{The reconstruction results of a human body in different pose using four methods. (a) Kalibr~\cite{Maye2013Self}, (b) Kalibr+ICP, (c) SBA only, (d) SBA+ICP. We render the point clouds from different views with different colors.}
+	\caption{The reconstruction results of a human body in different poses using four methods. We render the point clouds from different views with different colors.}
 	\label{fig:model_poses}
 \end{figure}
 
@@ -86,9 +86,9 @@ As we can see, the model reconstructed by our hybrid system has the highest qual
 \comments{}
 
 \section{conclusion}
-We present an efficient system integrating a global multi-camera calibration with the 3D registered of point clouds. 
-By a global bundle adjustment, we reduce the accumulative error and the inconsistence caused by the pairwise camera pose estimation, and achieve a set of accurate extrinsic parameters with less re-projection error. 
-With the point cloud registration, the errors in depth estimation are balanced out and a high-quality 3D model is finally obtained. 
+We present an efficient system integrating a global multi-camera calibration with the 3D registration of point clouds.
+By a global bundle adjustment, we reduce the accumulative error and the inconsistence caused by the pairwise camera pose estimation, and achieve a set of accurate extrinsic parameters with less re-projection error.
+With the point cloud registration, the errors in depth estimation are balanced out and a high-quality 3D model is finally obtained.
 Our calibration algorithm has been tested on both re-projection error and ground truth data. The experimental results has proved that the two steps of our system are both necessary and effective, and more accurate models can be reconstructed using our method.
 
 

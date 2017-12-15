@@ -31,7 +31,7 @@ This will help to reduce the accumulative error and inconsistence caused by the 
   \centerline{(b)}\medskip
 \end{minipage}
 %
-\caption{Results of the checkerboard corners detection. (a): Results when the user moves freely. (b): Results when the checkerboard is on the ground. }
+\caption{Results of the checkerboard corners detection. (a) Results when the user moves freely. (b) Results when the checkerboard is on the ground. }
 \label{fig:checkerboard}
 \end{figure}
 %
@@ -72,11 +72,11 @@ We compute the average re-projection error and compare it to evaluate the effect
 %
 Using the 2D coordinates of the corners detected in the checkerboard images, we can achieve the 3D space coordinates of $\mathbf{p}^{t}_{i}$ by triangulation respectively using the camera parameters obtained by Kalibr and our global calibration method (SBA).
 Then we re-project $\mathbf{p}^{t}_{i}$ to each view which the checkerboard can be seen and compute the average re-projection error, as shown in Table~\ref{tab:reprojection}.
-\xj{We can see that...}
+We can see that the re-projection error is smaller and consistency using the camera parameters after the global optimization, which proves the effectiveness of our global calibration step.
 
 \begin{table*}
 	\centering
-	\caption{Average re-projection error (pixels) of each camera using different methods. (a) results by Kalibr~\cite{Maye2013Self}, (b) results by our global calibration method. The re-projection error of (b) is smaller and uniform in each view, while the results of (a) contain the accumulative error and the inconsistence. }
+	\caption{Average re-projection error (pixels) of each camera using different methods. (a) results by Kalibr~\cite{Maye2013Self}, (b) results by our global calibration method. The re-projection error of (b) is smaller and uniform in each view, while the results of (a) contain the accumulative error and the inconsistence.}
 	\label{tab:reprojection}
 	\begin{tabular}{l|cccccccc}
 		\hline
