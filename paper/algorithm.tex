@@ -45,7 +45,7 @@ While the user holding the checkerboard moves around, we can capture $T$ groups 
 %
 
 
-According to the projection equation defined in Eq.~\ref{eq:cam-proj}, our calibration method optimizes the camera parameters to minimize the projection errors. Considering the $T$ groups of images together, the projection error is defined as:
+According to the re-projection equation defined in Eq.~\ref{eq:cam-proj}, our calibration method optimizes the camera parameters to minimize the re-projection errors. Considering the $T$ groups of images together, the re-projection error is defined as:
 %
 \begin{equation} \label{eq:global-proj-error}
 E(\mathbf{M}_{j},\mathbf{p}^{t}_{i})=\sum_{t}\sum_{j\in \mathcal{C}^{t}}\sum_{i} \big( \hat{\vb{x}}(\vb{K}_{j},\mathbf{M}_{j}, \vb{p}^{t}_{i})-\mathbf{x}^{t}_{ji} \big)^{2},
@@ -106,7 +106,7 @@ From the two images of the projected patterns captured by the two NIR cameras, a
 
 
 %\subsection{Camera model}
-Let $\mathbf{p}=(x,y,z,1)^{T}$ be the homogeneous coordinate of a point $P$ in the 3D space, and $\mathbf{x}=(u,v,1)^{T}$ the homogeneous coordinates of its projected point on an image plane, the perspective projection of a pin-hole camera is usually described as
+Let $\mathbf{p}=(x,y,z,1)^{T}$ be the homogeneous coordinate of a point $P$ in the 3D space, and $\mathbf{x}=(u,v,1)^{T}$ the homogeneous coordinates of its projected point on an image plane, the perspective re-projection of a pin-hole camera is usually described as
 \begin{equation}
 z_{p}\mathbf{x}=\mathbf{K}\mathbf{M}\mathbf{p},
 \end{equation}
