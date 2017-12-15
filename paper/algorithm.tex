@@ -3,17 +3,15 @@
 \label{sec:global-calib}
 
 
-To calibrate the multi-camera system, we follow the common framework that consists of searching for feature point correspondences and minimizing re-projection errors.
+To calibrate the multi-camera system, we follow the common framework that searches for feature point correspondences first and minimizes the re-projection errors.
 %
 Because of the lack of the features in indoor scenes and the high requirement of the quality of the calibration, we use a $6\times7$ checkerboard with squares of 117 mm which can be made easily for the accuracy and robustness.
 
 %
 An user holding the checkerboard could move in front of the cameras freely in the working space.
-At each moment, the 8 cameras capture images simultaneously.
+At each moment, the checkerboard is simultaneously seen in three or four views usually.
 %
-The checkerboard is simultaneously seen in three or four views usually.
-%
-Our system is flexible enough while it does not require that the checkerboard must be visible under all points of view.
+Our system is flexible enough because it does not require that the checkerboard must be visible under all points of view.
 %
 We also use the images with checkerboard on the ground which allows the checkerboard corners can be seen in all the 8 cameras, as shown in Figure~\ref{fig:checkerboard}.
 This will help to reduce the accumulative error and inconsistence caused by the pairwise calibration.
@@ -48,7 +46,7 @@ While the user holding the checkerboard moves around, we can capture $T$ groups 
 According to the re-projection equation defined in Eq.~\ref{eq:cam-proj}, our calibration method optimizes the camera parameters to minimize the re-projection errors. Considering the $T$ groups of images together, the re-projection error is defined as:
 %
 \begin{equation} \label{eq:global-proj-error}
-E(\mathbf{M}_{j},\mathbf{p}^{t}_{i})=\sum_{t}\sum_{j\in \mathcal{C}^{t}}\sum_{i} \big( \hat{\vb{x}}(\vb{K}_{j},\mathbf{M}_{j}, \vb{p}^{t}_{i})-\mathbf{x}^{t}_{ji} \big)^{2},
+E(\mathbf{M}_{j},\mathbf{p}^{t}_{i})=\sum_{t}\sum_{c_j\in \mathcal{C}^{t}}\sum_{i} \big( \hat{\vb{x}}(\vb{K}_{j},\mathbf{M}_{j}, \vb{p}^{t}_{i})-\mathbf{x}^{t}_{ji} \big)^{2},
 \end{equation}
 %
 where $\hat{\vb{x}}(\vb{K}_{j},\mathbf{M}_{j}, \mathbf{p}_{i})$ is the estimated 2D positions of a 3D point $\vb{p}^{t}_{i}$ in the image plane of the camera $c_j$ with its parameters $\camin_j$ and $\camex_j$.
@@ -72,21 +70,21 @@ Typically, $T=30$ groups produce good enough results.
 The re-projection error describes the accuracy of the calibration system.
 We compute the average re-projection error and compare it to evaluate the effectiveness of our global calibration step.
 %
-Using the 2D coordinates of the corners detected in the checkerboard images, we can achieve the 3D space coordinates of $\mathbf{p}^{t}_{i}$ by triangulation respectively using the camera parameters obtained by Kalibr and our global calibration method.
+Using the 2D coordinates of the corners detected in the checkerboard images, we can achieve the 3D space coordinates of $\mathbf{p}^{t}_{i}$ by triangulation respectively using the camera parameters obtained by Kalibr and our global calibration method (SBA).
 Then we re-project $\mathbf{p}^{t}_{i}$ to each view which the checkerboard can be seen and compute the average re-projection error, as shown in Table~\ref{tab:reprojection}.
-
+\xj{We can see that...}
 
 \begin{table*}
 	\centering
 	\caption{Average re-projection error (pixels) of each camera using different methods. (a) results by Kalibr~\cite{Maye2013Self}, (b) results by our global calibration method. The re-projection error of (b) is smaller and uniform in each view, while the results of (a) contain the accumulative error and the inconsistence. }
 	\label{tab:reprojection}
-	\begin{tabular}{lcccccccc}
+	\begin{tabular}{l|cccccccc}
 		\hline
 		Methods & Cam 1 & Cam 2 & Cam 3 & Cam 4 & Cam 5 & Cam 6 & Cam 7 & Cam 8\\
 		\hline
-		(a) Kalibr &4.54 &3.20 &11.16 &10.74 &4.87 &6.75 &3.64 &5.11\\
+		Kalibr &4.54 &3.20 &11.16 &10.74 &4.87 &6.75 &3.64 &5.11\\
 		
-		(b) SBA   &\textbf{0.32} &\textbf{0.32} &\textbf{0.38}  &\textbf{0.35} &\textbf{0.37} &\textbf{0.40} &\textbf{0.33} &\textbf{0.34} \\
+		SBA   &\textbf{0.32} &\textbf{0.32} &\textbf{0.38}  &\textbf{0.35} &\textbf{0.37} &\textbf{0.40} &\textbf{0.33} &\textbf{0.34} \\
 		
 		\hline
 		

@@ -4,7 +4,7 @@
 
 
 %We achieve the depth data from the 2 NIR cameras using depth estimation methods~\cite{Bleyer2011PatchMatch}.
-After the global optimization, we get a set of camera parameters with minimal re-projection error.
+After the global optimization, we get a set of camera parameters with the minimal re-projection error.
 However, there are still many problems in the 3D model obtained from directly merging the partial point clouds estimated from different views according to the estimated camera poses, mainly due to the low quality of depth estimation.
 %
 %If the depth and camera parameters are both accurate enough, the point clouds of different views should align very well.
@@ -15,7 +15,10 @@ The misalignment typically occurs at some parts of the human body, such as the h
 Therefore, we use the Iterative Closest Point (ICP) algorithm~\cite{Besl1992A} to slightly adjust the rigid transformation between two partial point clouds, and fuse the transformed point clouds to balance out the depth errors.
 %
 
-We choose the point cloud of one view as the reference, and align the point cloud of one of its neighboring views to it using the ICP algorithm. We combine the point clouds of the two views after that. Then we choose another neighboring view and do the registration sequentially. When all the point cloud of different views are registered, a high-quality 3D model can be achieved, as shown in Fig.~\ref{fig:3Dmodel}.
+We choose the point cloud of one view as the reference, and compute the transformation of the point clouds from its neighboring views to it using the ICP algorithm. 
+We then merge the point clouds as a new reference. 
+The other views are registered sequentially in a similar way. 
+When all the point clouds of different views are registered, a high-quality 3D model can be achieved, as shown in Fig.~\ref{fig:3Dmodel}.
 \begin{figure}[ht]
 %
 \begin{minipage}[b]{.48\linewidth}
@@ -32,7 +35,7 @@ We choose the point cloud of one view as the reference, and align the point clou
   \centerline{(b)}\medskip
 \end{minipage}
 %
-\caption{The 3D model after the registration. (a): The front of the model. (b): The back of the model. }
+\caption{An 3D model after ICP registration. (a) The front side of the model. (b) The back side of the model. }
 \label{fig:3Dmodel}
 \end{figure}
 

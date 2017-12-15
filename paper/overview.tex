@@ -6,7 +6,8 @@ A multi-camera system is set up to capture objects in an indoor scene, as shown 
 %The cameras in our 3D reconstruction system are placed on the periphery of the room pointing inwards, only the neighboring cameras have overlapping fields of view. \xj{what is the point of this overlapping fov?}
 %
 $K$ ($K=8$) camera pods are installed around the working space looking inwards for a full capture.
-Each camera pod consists of one color camera and two Near Infra-Red cameras. A laser pointer is used to produce special patterns. From the pair of images of the projected patterns captured by the two NIR cameras, a depth map $D_k$ can be estimated using PatchMatch stereo algorithm~\cite{Bleyer2011PatchMatch}.
+Each camera pod consists of one color camera and two Near Infra-Red (NIR) cameras. A laser pointer is used to produce special patterns. 
+From a pair of images of the projected patterns captured by the two NIR cameras, a depth map $D_k$ can be estimated using the PatchMatch stereo algorithm~\cite{Bleyer2011PatchMatch}.
 There are also several alternative depth cameras or depth estimation algorithm to obtain the depth map of each view. Most of them produce a rough depth map with noise and errors.
 As Fig.~\ref{fig:deptherror} shows, the estimated depth map encounters large distortions on the boundary of the human body, and missing data in the head area.
 How to improve the quality of depth map is beyond the scope of this paper.
@@ -53,22 +54,23 @@ How to improve the quality of depth map is beyond the scope of this paper.
 
 
 %
-Under the assumption of pinhole camera, each camera has a group of parameters including the intrinsic matrix $K$ and extrinsic matrix $M$ to project a point $P$ in the 3D space to its image plane as
+Under the pinhole camera assumption, each camera has a group of parameters including the intrinsic matrix $K$ and extrinsic matrix $M$ to project a point in the 3D space to its image plane as
 \begin{equation}\label{eq:cam-proj}
 z_{p}\mathbf{x}=\mathbf{K}\mathbf{M}\mathbf{p},
 \end{equation}
-where $\mathbf{p}=(x,y,z,1)^{T}$ is the homogeneous coordinate of $P$, and $\mathbf{x}=(u,v,1)^{T}$ is the homogeneous coordinate of its projected point on the image plane.
+where $\mathbf{p}=(x,y,z,1)^{T}$ is the homogeneous coordinate of the 3D point, and $\mathbf{x}=(u,v,1)^{T}$ is the homogeneous coordinate of its projected point on the image plane.
 %
 
 
-From the depth map estimated by each camera pod, a partial point cloud can be reconstructed by back-projecting each pixel in the depth map into the 3D space according to the pose parameters of each camera.
+From the depth map estimated by each camera pod, a partial point cloud can be reconstructed by back-projecting each pixel in the depth map into the 3D space according to the parameters of each camera.
 %
 A 3D model can be obtained by fusing the $K$ point clouds.
 %
 %
-Ideally, with the accurate depth $z_p$ of each image point $\vb{x}$, and accurate camera parameters $\camin$ and $\camex$, the image pixels captured in different views can be back-projected to the 3D space and well aligned to a 3D point $\vb{p}$.
+Ideally, with the accurate depth $z_p$ of each image point $\vb{x}$, and accurate camera parameters $\camin$ and $\camex$, the image pixels captured in different views can be back-projected to the 3D space and well aligned in the 3D space.
 %
-However, due to the unavoidable error and noises in depth maps, our framework relies on two main parts to reconstruct a high-quality model.
+However, due to the unavoidable error and noises in depth maps, the points cloud obtained in different views deviate a lot even with accurate camera poses.
+We divide the pipeline into two main parts to reconstruct a high-quality model.
 %
 The first part is a global camera calibration method to estimate the camera parameters $\{\camin_k, \camex_k\}^{K}_{k=1}$ as accurate as possible, as described in Sec.~\ref{sec:global-calib}.
 The second is a registration method to produce 3D point clouds as consistent as possible from in-accurate depth $z_p$, as described in Sec.~\ref{sec:registration}.
